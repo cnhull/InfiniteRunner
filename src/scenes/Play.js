@@ -46,8 +46,6 @@ class Play extends Phaser.Scene {
             repeatDelay: 1000
         })
 
-        // add Skater
-        //this.Player = new Skater(this, game.config.width/2 - 80, 280, 'skater').setScale(0.4, 0.4).setOrigin(0, 0).play('skate');
 
         // place tile sprites
         this.add.image(game.config.width/2, game.config.height/2 -9, 'gameOverBox').setScale(1.5, 1.5);
@@ -60,11 +58,7 @@ class Play extends Phaser.Scene {
         //this.snowfield2 = this.add.tileSprite(0, 0, 640, 480, 'snowBack').setOrigin(0, 0);
         this.icefield = this.add.tileSprite(0, 0, 640, 480, 'ice').setOrigin(0, 0);
 
-        // white rectangle borders
-        /*this.add.rectangle(5, 443, 630, 32, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(5, 5, 32, 455, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(603, 5, 32, 455, 0xFFFFFF).setOrigin(0, 0);
-        */
+
 
         // add Objects; sunlight, obstacles, and the player
         this.Sunlight01 = new Sunlight(this, game.config.width, 230, 'sunlight', 0, 50).setOrigin(0,0);
@@ -104,17 +98,16 @@ class Play extends Phaser.Scene {
             fixedWidth: 260
         }
         
-        this.scoreLeft = this.add.text(200, 10, 'The Snow Falls', scoreConfig);
-        //this.scoreRight = this.add.text(369, 54, 'FIRE', scoreConfig);
+        //this.scoreLeft = this.add.text(200, 10, 'The Snow Falls', scoreConfig);
+        
         
        
 
         this.currentTime = game.settings.gameTimer/1000;
         this.currentTime--;
         this.total = 0;
+
         scoreConfig.align = 'center';
-        this.timeDisplay = this.add.text(200, 54, 'Time Left: '+ this.currentTime,  scoreConfig);
-        
         // decrement timer
         let timedEvent = this.time.addEvent({ 
             delay: 1000, 
@@ -150,10 +143,11 @@ class Play extends Phaser.Scene {
         this.end.alpha = 0;
         this.suns.alpha = 0;
         
+        scoreConfig.color = '#FFFFFF';
+        scoreConfig.align = 'left';
+        this.timeDisplay = this.add.text(5, 440, 'Time Left: '+ this.currentTime,  scoreConfig);
 
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-           
-         }, null, this);
+
 
 
         
@@ -163,8 +157,6 @@ class Play extends Phaser.Scene {
         
         if(!this.gameOver){
 
-        this.timeLeft = Math.trunc((game.settings.gameTimer - this.clock.getElapsed())/1000)
-        this.totalTime = Math.trunc(this.time.now/1000);
         this.results.text = this.total;
         this.hold = this.total;
 
@@ -195,6 +187,7 @@ class Play extends Phaser.Scene {
     
     }
     if(this.gameOver){
+        this.timeDisplay.alpha = 0;
         this.end.alpha = 1;
         if(this.hold > game.settings.longestTime){
             game.settings.longestTime = this.hold;
