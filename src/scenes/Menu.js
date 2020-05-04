@@ -10,6 +10,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
         this.load.audio('Music', './assets/MusicForMod.mp3');
         this.load.image('title', './assets/Title2.png');
+        this.load.image('background', './assets/snowfield.png');
     }
 
     create() {
@@ -32,7 +33,7 @@ class Menu extends Phaser.Scene {
         let centerY = game.config.height/2;
         let textSpacer = 64;
        
-
+        this.background = this.add.image(430, 170, 'background').setScale(0.4);
         var start = this.add.image(320,240,'title');  
         
         // define keys

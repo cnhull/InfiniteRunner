@@ -224,14 +224,43 @@ class Play extends Phaser.Scene {
             return str;
         }    
 
-        checkCollision(Player, Sunlight) {
+        checkCollision(player, sun) {
             // simple AABB checking
-            if (Sunlight.x < Player.x + Player.width*0.4 && 
-                Sunlight.x > Player.x && 
-                Sunlight.y < Player.y + Player.height &&
-                Sunlight.y > Player.y) {
+            //top right corner
+            let width = player.width*0.4;
+            let height = player.height*0.4;
+            let mod = 0.8*height;
+            
+            //top right corner
+            if( sun.x > player.x &&
+                sun.x < player.x + width &&
+                sun.y + sun.height > player.y + mod &&
+                sun.y < player.y + height){
+                return true;
+            }
+            //bottom right corner
+            if( sun.x > player.x &&
+                sun.x < player.x + width &&
+                sun.y > player.y + mod &&
+                sun.y < player.y + height){
                     return true;
-            } 
+                }
+            //top left corner
+            if( sun.x + sun.width > player.x &&
+                sun.x < player.x + width &&
+                sun.y + sun.height > player.y + mod &&
+                sun.y < player.y + height){
+                    return true;
+                }
+            //bottom left corner
+            if( sun.x + sun.width > player.x &&
+                sun.x < player.x + width &&
+                sun.y > player.y + mod &&
+                sun.y < player.y + height){
+                    return true;
+                }
+
+
             else {
                 return false;
             }
