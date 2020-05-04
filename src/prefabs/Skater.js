@@ -11,7 +11,7 @@ class Skater extends Phaser.GameObjects.Sprite {
     update() {
         // up/down movement
         if (1==1) {
-            if ((keyUP.isDown && this.y > 80)) {
+            if ((keyUP.isDown && this.y > 75)) {
                 this.y -= 2;
             } else if ((keyDOWN.isDown && this.y < 325)) {
                 this.y += 2;

@@ -11,7 +11,8 @@ class Play extends Phaser.Scene {
         this.load.image('sky', './assets/sky.png');
         this.load.image('trees1', './assets/trees1.png');
         this.load.image('trees2', './assets/trees2.png');
-        this.load.image('snow', './assets/snow.png');
+        this.load.image('snowFront', './assets/snow2.png');
+        this.load.image('snowBack', './assets/snow.png');
         this.load.image('ice', './assets/ice.png');
         this.load.image('gameOverBox', './assets/gameOver.png'); 
     }
@@ -35,8 +36,10 @@ class Play extends Phaser.Scene {
         // place tile sprites
         this.sky = this.add.tileSprite(0, 0, 640, 480, 'sky').setOrigin(0, 0);
         this.trees2 = this.add.tileSprite(0, 0, 640, 480, 'trees2').setOrigin(0, 0);
+        this.snowfield2 = this.add.tileSprite(0, -15, 640, 480, 'snowBack').setOrigin(0, 0);
         this.trees1 = this.add.tileSprite(0, 0, 640, 480, 'trees1').setOrigin(0, 0);
-        this.snowfield = this.add.tileSprite(0, 0, 640, 480, 'snow').setOrigin(0, 0);
+        this.snowfield = this.add.tileSprite(0, 0, 640, 480, 'snowFront').setOrigin(0, 0);
+        //this.snowfield2 = this.add.tileSprite(0, 0, 640, 480, 'snowBack').setOrigin(0, 0);
         this.icefield = this.add.tileSprite(0, 0, 640, 480, 'ice').setOrigin(0, 0);
 
         // white rectangle borders
@@ -166,6 +169,7 @@ class Play extends Phaser.Scene {
 
 
         this.trees2.tilePositionX += 3;
+        this.snowfield2.tilePositionX += 3;
         this.trees1.tilePositionX += 4;
         this.snowfield.tilePositionX += 4;  // scroll tile sprite
         this.icefield.tilePositionX += 4;
@@ -192,14 +196,25 @@ class Play extends Phaser.Scene {
         }
         
         if (this.checkCollision(this.Player, this.Sunlight01)) {
-            this.currentTime += 2;
+            this.inc = Phaser.Math.Between(1, 2);
+            this.currentTime += this.inc;
             this.sunCount++;
             this.suns.text = this.sunCount;
             this.timeDisplay.text = 'Time Left: '+ this.currentTime;
+            this.speedSun();
             this.Sunlight01.reset();
+
             
         }
     }
+        speedSun(){
+            let temp = game.settings.gameSpeed;
+            if(temp < 2){
+                game.settings.gameSpeed = temp + 0.05;
+            }
+            console.log(game.settings.gameSpeed);
+        }
+
         calcTime(seconds){
             let str = "";
             let minutes = 0;
