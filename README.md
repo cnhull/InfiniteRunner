@@ -1,2 +1,2 @@
 # Snow-Fall
-Infinite Runner created for CMPM/ART 120
+Infinite Runner created for CMPM/ARTG 120

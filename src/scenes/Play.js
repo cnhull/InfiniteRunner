@@ -5,6 +5,8 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
+        // load texture atlas 
+        this.load.atlas('skatersheet', './assets/skatersheet.png', './assets/skater.json');
         // load images/tile sprites
         this.load.image('skater', './assets/skater.png');
         this.load.image('sunlight', './assets/sunlight.png');
@@ -35,7 +37,21 @@ class Play extends Phaser.Scene {
         music = this.sound.add('Music', musicConfig);
         music.play(musicConfig);
 
+        // animation config
+        this.anims.create({
+            key: 'skate',
+            frames: this.anims.generateFrameNames('skatersheet', {prefix:'skater', start: 4, end: 1}),
+            frameRate: 3,
+            repeat: -1,
+            repeatDelay: 1000
+        })
+
+        // add Skater
+        //this.Player = new Skater(this, game.config.width/2 - 80, 280, 'skater').setScale(0.4, 0.4).setOrigin(0, 0).play('skate');
+
         // place tile sprites
+        this.add.image(game.config.width/2, game.config.height/2 -9, 'gameOverBox').setScale(1.5, 1.5);
+
         this.sky = this.add.tileSprite(0, 0, 640, 480, 'sky').setOrigin(0, 0);
         this.trees2 = this.add.tileSprite(0, 0, 640, 480, 'trees2').setOrigin(0, 0);
         this.snowfield2 = this.add.tileSprite(0, -15, 640, 480, 'snowBack').setOrigin(0, 0);
@@ -50,10 +66,10 @@ class Play extends Phaser.Scene {
         this.add.rectangle(603, 5, 32, 455, 0xFFFFFF).setOrigin(0, 0);
         */
 
-        // add Skater
+        // add Objects; sunlight, obstacles, and the player
         this.Sunlight01 = new Sunlight(this, game.config.width, 230, 'sunlight', 0, 50).setOrigin(0,0);
         this.Obstacle01 = new Obstacle(this, game.config.width, 230, 'rock', 0, 50).setOrigin(0,0);
-        this.Player = new Skater(this, game.config.width/2 - 80, 280, 'skater').setScale(0.4, 0.4).setOrigin(0, 0);
+        this.Player = new Skater(this, game.config.width/2 - 80, 280, 'skater').setScale(0.4, 0.4).setOrigin(0, 0).play('skate');
         //this.Sunlight01 = new Sunlight(this, game.config.width, 230, 'sunlight', 0, 50).setOrigin(0,0);
 
         
@@ -124,9 +140,13 @@ class Play extends Phaser.Scene {
         scoreConfig.fixedWidth = 0;
         this.goof = this.add.rectangle(0, 0, 640, 480, 0x000000, 1).setOrigin(0, 0);
         this.end = this.add.image(game.config.width/2, game.config.height/2, 'gameOverBox');
-        this.results = this.add.text(game.config.width/2 + 10, 202,  "  ", scoreConfig);
-        this.suns = this.add.text(game.config.width/2 + 35, 247, this.sunCount + "  ", scoreConfig);
+        this.results = this.add.text(game.config.width/2 + 10, 175,  "  ", scoreConfig);
+        this.suns = this.add.text(game.config.width/2 + 35, 212.5, this.sunCount + "  ", scoreConfig);
+        this.longest = this.add.text(game.config.width/2 + 35, 250,  this.calcTime(game.settings.longestTime), scoreConfig);
+        this.most = this.add.text(game.config.width/2 + 35, 287.5, game.settings.mostSuns, scoreConfig);
         this.results.alpha = 0;
+        this.longest.alpha = 0;
+        this.most.alpha = 0;
         this.end.alpha = 0;
         this.suns.alpha = 0;
         
@@ -176,14 +196,25 @@ class Play extends Phaser.Scene {
     }
     if(this.gameOver){
         this.end.alpha = 1;
+        if(this.hold > game.settings.longestTime){
+            game.settings.longestTime = this.hold;
+            this.longest.text = (this.calcTime(this.hold));
+        }
+        if(this.sunCount > game.settings.mostSuns){
+            game.settings.mostSuns = this.sunCount;
+            this.most.text = this.sunCount;
+        }
         this.results.text = (this.calcTime(this.hold));
         this.results.alpha = 1;
         this.suns.alpha = 1;
+        this.longest.alpha = 1;
+        this.most.alpha = 1;
     }
 
         // check key input for restart / menu
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keySPACE)) {
             music.stop();
+            game.settings.gameSpeed = 1;
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
@@ -206,6 +237,7 @@ class Play extends Phaser.Scene {
             this.currentTime -= this.dec;
             this.timeDisplay.text = 'Time Left: ' + this.currentTime;
             game.settings.hit = true;
+            this.cameras.main.shake(50);
             console.log("ouch!!!");
 
         }
