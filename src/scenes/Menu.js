@@ -35,6 +35,9 @@ class Menu extends Phaser.Scene {
        
         this.background = this.add.image(430, 170, 'background').setScale(0.4);
         var start = this.add.image(320,240,'title');  
+        this.add.rectangle(160, 300, 340, 50, 0xf5f8fa, 1).setOrigin(0, 0);
+
+        
         
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
