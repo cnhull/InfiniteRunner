@@ -13,7 +13,8 @@ let game = new Phaser.Game(config);
 // define game settings
 game.settings = {
     gameTimer: 61000,  
-    gameSpeed: 1
+    gameSpeed: 1,
+    hit: false
 }
 
 

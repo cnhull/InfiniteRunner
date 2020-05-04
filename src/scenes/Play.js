@@ -8,6 +8,7 @@ class Play extends Phaser.Scene {
         // load images/tile sprites
         this.load.image('skater', './assets/skater.png');
         this.load.image('sunlight', './assets/sunlight.png');
+        this.load.image('rock', './assets/rock.png'); 
         this.load.image('sky', './assets/sky.png');
         this.load.image('trees1', './assets/trees1.png');
         this.load.image('trees2', './assets/trees2.png');
@@ -15,6 +16,7 @@ class Play extends Phaser.Scene {
         this.load.image('snowBack', './assets/snow.png');
         this.load.image('ice', './assets/ice.png');
         this.load.image('gameOverBox', './assets/gameOver.png'); 
+
     }
 
     create() {
@@ -50,6 +52,7 @@ class Play extends Phaser.Scene {
 
         // add Skater
         this.Sunlight01 = new Sunlight(this, game.config.width, 230, 'sunlight', 0, 50).setOrigin(0,0);
+        this.Obstacle01 = new Obstacle(this, game.config.width, 230, 'rock', 0, 50).setOrigin(0,0);
         this.Player = new Skater(this, game.config.width/2 - 80, 280, 'skater').setScale(0.4, 0.4).setOrigin(0, 0);
         //this.Sunlight01 = new Sunlight(this, game.config.width, 230, 'sunlight', 0, 50).setOrigin(0,0);
 
@@ -139,42 +142,35 @@ class Play extends Phaser.Scene {
     update() {
         
         if(!this.gameOver){
+
         this.timeLeft = Math.trunc((game.settings.gameTimer - this.clock.getElapsed())/1000)
         this.totalTime = Math.trunc(this.time.now/1000);
         this.results.text = this.total;
         this.hold = this.total;
 
-        console.log(this.total);
-        //console.log("been playing: " + this.results.text);
-
-        //this.timeDisplay.text = 'Time Left: '+ this.timeLeft;
-        //console.log(this.timeLeft);
-        //this.clockDisplay.text = this.timeLeft;
         if(this.currentTime>61){
             this.goof.alpha = 0;
         }
 
         if(this.currentTime < 61){
-            //console.log("time left: "  + this.timeLeft)
             this.col = 0.61 - 0.01*(this.currentTime);
-            //console.log(0.1*this.timeLeft);
             this.goof.alpha = this.col;
-            //console.log("fucka you basard " + this.col)
         }
-        //console.log(this.currentTime + "aaaaahhhh");
         if(this.currentTime <= 0){
             this.gameOver = true;
         }
         
 
 
-        this.trees2.tilePositionX += 3;
-        this.snowfield2.tilePositionX += 3;
-        this.trees1.tilePositionX += 4;
-        this.snowfield.tilePositionX += 4;  // scroll tile sprite
-        this.icefield.tilePositionX += 4;
+
+        this.trees2.tilePositionX += 3*game.settings.gameSpeed;
+        this.snowfield2.tilePositionX += 3*game.settings.gameSpeed;
+        this.trees1.tilePositionX += 4*game.settings.gameSpeed;
+        this.snowfield.tilePositionX += 4*game.settings.gameSpeed;  // scroll tile sprite
+        this.icefield.tilePositionX += 4*game.settings.gameSpeed;
         this.Player.update();         // update Skater sprite
         this.Sunlight01.update();
+        this.Obstacle01.update();
             
     
     }
@@ -202,9 +198,16 @@ class Play extends Phaser.Scene {
             this.suns.text = this.sunCount;
             this.timeDisplay.text = 'Time Left: '+ this.currentTime;
             this.speedSun();
-            this.Sunlight01.reset();
+            this.Sunlight01.reset();  
+        }
 
-            
+        if(this.checkCollision(this.Player, this.Obstacle01) && game.settings.hit == false){
+            this.dec = Phaser.Math.Between(1, 4);
+            this.currentTime -= this.dec;
+            this.timeDisplay.text = 'Time Left: ' + this.currentTime;
+            game.settings.hit = true;
+            console.log("ouch!!!");
+
         }
     }
         speedSun(){
