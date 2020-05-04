@@ -12,7 +12,7 @@ let game = new Phaser.Game(config);
 
 // define game settings
 game.settings = {
-    gameTimer: 61000  
+    gameTimer: 6000  
 }
 
 

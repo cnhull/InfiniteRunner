@@ -5,6 +5,7 @@ class Skater extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);   // add to existing scene, displayList, updateList
         this.sfxRocket = scene.sound.add('sfx_rocket'); // add rocket sfx
         this.isJumping = false;      // track firing status
+        
     }
 
     update() {
